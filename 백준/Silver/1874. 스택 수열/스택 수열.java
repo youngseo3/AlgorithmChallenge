@@ -13,20 +13,18 @@ public class Main {
 			A[i] = Integer.parseInt(br.readLine());
 		}
 		Stack<Integer> stack = new Stack<>();
-		StringBuffer bf = new StringBuffer();  // StringBuffer 대신 StringBuilder 사용
+		StringBuffer bf = new StringBuffer();  
 	    int num = 1; // 오름차순 수
 	    boolean result = true;
 		for(int i=0; i<A.length; i++) {
 			int s = A[i];
-			if(s >= num) {
-				while(s >= num) {
-					stack.push(num++);
-					bf.append("+\n");
-				}
-				stack.pop();
-				bf.append("-\n");
+			
+			while(s >= num) {
+				stack.push(num++);
+				bf.append("+\n");
 			}
-			else {
+			
+			if(s < num) {
 				int n = stack.pop();
 				if(s < n) {
 					System.out.println("NO");
