@@ -2,10 +2,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 
 public class Main {
-	static LinkedList<Integer> queue = new LinkedList<>();;
+    static ArrayDeque<Integer> queue = new ArrayDeque<>();
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -40,7 +40,7 @@ public class Main {
 	}
 	
 	static void push(int x) {
-		queue.add(x);
+        queue.addLast(x);  // O(1)
 	}
 	
 	static int pop() {
@@ -48,7 +48,7 @@ public class Main {
 			return -1;
 		}
 		
-		return queue.remove(0);
+        return queue.removeFirst();  // O(1)
 	}
 
 	static int size() {
@@ -68,7 +68,7 @@ public class Main {
 			return -1;
 		}
 		
-		return queue.get(0);
+        return queue.getFirst();  // O(1)
 	}
 
 	static int back() {
@@ -76,7 +76,7 @@ public class Main {
 			return -1;
 		}
 		
-		return queue.get(queue.size() - 1);
+		return queue.getLast();
 	}
 }
 
