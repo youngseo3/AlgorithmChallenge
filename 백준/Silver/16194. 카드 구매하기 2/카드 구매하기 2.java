@@ -19,7 +19,7 @@ public class Main {
         for(int i = 1; i < N + 1; i++) {
         	dp[i] = p[i];
         	
-        	for(int j = 1; j <= i; j++) {
+        	for(int j = 1; j < i; j++) {
         		dp[i] = Math.min(p[j] + dp[i - j], dp[i]);        	
         	}
         }
