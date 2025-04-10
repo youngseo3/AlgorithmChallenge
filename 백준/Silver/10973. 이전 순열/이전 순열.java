@@ -33,7 +33,7 @@ public class Main {
 	
 	static boolean behindPermutation() {
 		int i = N - 1;
-		while(i > 0 && arr[i - 1] < arr[i]) {
+		while(i > 0 && arr[i - 1] <= arr[i]) {
 			i--;
 		}
 		
