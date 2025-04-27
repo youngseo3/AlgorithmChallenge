@@ -1,43 +1,65 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
+    
+    static boolean[] S = new boolean[21];
+    
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int M = Integer.parseInt(br.readLine());
-
-        int s = 0;
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < M; i++) {
-            String[] input = br.readLine().split(" ");
-
-            switch (input[0]) {
-                case "all":
-                    s = (1 << 21) - 1;
-                    break;
-                case "empty":
-                    s = 0;
-                    break;
-                default:
-                    int x = Integer.parseInt(input[1]);
-                    switch (input[0]) {
-                        case "add":
-                            s |= (1 << x);
-                            break;
-                        case "remove":
-                            s &= ~(1 << x);
-                            break;
-                        case "check":
-                            sb.append((s & (1 << x)) != 0 ? 1 : 0).append('\n');
-                            break;
-                        case "toggle":
-                            s ^= (1 << x);
-                            break;
-                    }
+        int M = Integer.parseInt(br.readLine());
+        
+        while(M-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            String command = st.nextToken();
+            
+            if (command.equals("all")) {
+                for(int i = 1; i <= 20; i++) {
+                    S[i] = true;
+                }
+            } else if (command.equals("empty")) {
+                for(int i = 1; i <= 20; i++) {
+                    S[i] = false;
+                }
+            } else {
+                int num = Integer.parseInt(st.nextToken());
+                
+                switch(command) {
+                    case "add":
+                        add(num);
+                        break;
+                    case "remove":
+                        remove(num);
+                        break;
+                    case "check":
+                        sb.append(check(num) ? 1 : 0).append('\n');
+                        break;
+                    case "toggle":
+                        toggle(num);
+                        break;
+                }
             }
         }
-
-        System.out.println(sb);
+        
+        System.out.print(sb);
+    }
+    
+    static boolean check(int x) {
+        return S[x];
+    }
+    
+    static void add(int x) {
+        S[x] = true;
+    }
+    
+    static void remove(int x) {
+        S[x] = false;
+    }
+    
+    static void toggle(int x) {
+        S[x] = !S[x];
     }
 }
