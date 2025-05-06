@@ -33,9 +33,13 @@ public class Solution {
         	
         	int abs = Math.abs(M - N);
         	if(abs == 0) {
+        		int temp = 0;
+        		
         		for(int i = 0; i < M; i++) {
-        			max += A[i] * B[i];
+        			temp += A[i] * B[i];
     			}
+        		
+        		max = Math.max(max, temp);
         	}
         	
         	for(int i = 0; i <= abs; i++) {
@@ -60,4 +64,5 @@ public class Solution {
         System.out.println(sb);
 
 	}
+
 }
