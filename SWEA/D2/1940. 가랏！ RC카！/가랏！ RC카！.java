@@ -1,36 +1,38 @@
 import java.io.*;
 import java.util.StringTokenizer;
-import java.util.Scanner;
 
 public class Solution {
-	
-	public static void main(String[] args) throws IOException {
-		Scanner sc = new Scanner(System.in);
-		StringBuilder sb = new StringBuilder();
-		int T = sc.nextInt();
-		
-		for(int tc = 1; tc <= T; tc++) {
-			int distance = 0;
-			int speed = 0;
-			int N = sc.nextInt();
-			
-			while(N-- > 0) {
-				int command = sc.nextInt();
-				if(command == 1) {
-					speed += sc.nextInt();
-				} else if(command == 2) {
-					speed -= sc.nextInt();
-				}
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        int T = Integer.parseInt(br.readLine());
+
+        for(int tc = 1; tc <= T; tc++) {
+            int distance = 0;
+            int speed = 0;
+            int N = Integer.parseInt(br.readLine());
+
+            for(int i = 0; i < N; i++) {
+                StringTokenizer st = new StringTokenizer(br.readLine());
+                int command = Integer.parseInt(st.nextToken());
                 
-				if(speed < 0) {
-					speed = 0;
-				}
-				distance += speed;
-			}
-			
-			sb.append("#" + tc + " ").append(distance + "\n");
-		}
-		
-		System.out.println(sb);
-	}
+                if(command == 1) { // 가속
+                    speed += Integer.parseInt(st.nextToken());
+                } else if(command == 2) { // 감속
+                    speed -= Integer.parseInt(st.nextToken());
+                }
+                // command == 0인 경우는 현재 속도 유지
+
+                if(speed < 0) {
+                    speed = 0;
+                }
+                distance += speed;
+            }
+
+            sb.append("#").append(tc).append(" ").append(distance).append("\n");
+        }
+
+        System.out.println(sb);
+    }
 }
