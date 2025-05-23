@@ -1,7 +1,5 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Solution {
 
@@ -10,23 +8,29 @@ public class Solution {
 		StringBuilder sb = new StringBuilder();
 		
 		int T = Integer.parseInt(br.readLine());
-		for(int i = 1; i <= T; i++) {
-			int max = Integer.MIN_VALUE;  // 최소값으로 초기화
-            int min = Integer.MAX_VALUE;  // 최대값으로 초기화
-			int sum = 0;
+		
+		for(int tc = 1; tc <= T; tc++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
+			int max = Integer.MIN_VALUE;
+			int min = Integer.MAX_VALUE;
+			int sum = 0;
 			
-			for(int j = 0; j < 10; j++) {
-				int temp = Integer.parseInt(st.nextToken());
-				sum += temp;
-				max = Math.max(max, temp);
-				min = Math.min(min, temp);
+			int[] arr = new int[10];
+			for(int i = 0; i < 10; i++) {
+				arr[i] = Integer.parseInt(st.nextToken());
+				max = Math.max(max, arr[i]);
+				min = Math.min(min, arr[i]);
 			}
 			
-			sum = sum - max - min;
-			double result = (double)sum / 8;
+			for(int i = 0; i < 10; i++) {
+				if(max != arr[i] && min != arr[i]) {
+					sum += arr[i];
+				}
+			}
 			
-            sb.append("#").append(i).append(" ").append(Math.round(result)).append("\n");
+			double result = (double)sum / 8.0;
+			
+			sb.append("#" + tc + " ").append(String.format("%.0f", result) + "\n");
 		}
 		
 		System.out.println(sb);
