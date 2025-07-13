@@ -36,7 +36,7 @@ public class Main {
             int screen = current[0];
             int clipboard = current[1];
 
-            if(screen == S) continue;
+            if(screen == S) break;
 
             // 1. 복사하기: (screen, clipboard) -> (screen, screen)
             if(screen <= 1000 && time[screen][screen] == 0) {
