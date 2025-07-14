@@ -47,7 +47,8 @@ public class Main {
 	static void bfs(int x, int y) {
 		Queue<int[]> q = new LinkedList<>();
 		q.add(new int[] {x, y});
-		
+        visited[x][y] = true;  // 시작점 방문 체크
+
 		while(!q.isEmpty()) {
 			int[] p = q.poll();
 			
@@ -58,8 +59,8 @@ public class Main {
 				if(nextX >= 0 && nextX < M && 
 						nextY >= 0 && nextY < N && 
 						farm[nextX][nextY] == 1 && !visited[nextX][nextY]) {
-					q.add(new int[] {nextX, nextY});
 					visited[nextX][nextY] = true;
+					q.add(new int[]{nextX, nextY});
 				}
 			}
 		}
