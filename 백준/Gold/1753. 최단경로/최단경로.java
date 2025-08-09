@@ -38,7 +38,7 @@ public class Main {
 		// 시작 정점 초기화 
 		weights[K] = 0;
 		
-		for(int cnt = 1; cnt <= V; cnt++) {
+		for(int cnt = 1; cnt <= V - 1; cnt++) {
 			int minIdx = -1;
 			int minW = Integer.MAX_VALUE;
 			
