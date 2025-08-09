@@ -31,8 +31,8 @@ public class Main {
 		int[] weights = new int[V + 1];
 		Arrays.fill(weights, Integer.MAX_VALUE);
 		
-		// 우선순위 큐 (가중치 기준 오름차순)
-		PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.weight - b.weight);
+		// 우선순위 큐 (가중치 기준 오름차순) - Comparable 사용하므로 Comparator 불필요
+		PriorityQueue<Node> pq = new PriorityQueue<>();
 		
 		// 시작 정점 초기화
 		weights[K] = 0;
@@ -71,7 +71,7 @@ public class Main {
 		}
 	}
 	
-	static class Node {
+	static class Node implements Comparable<Node> {
 		int to;
 		int weight;
 		
@@ -79,5 +79,10 @@ public class Main {
 			this.to = to;
 			this.weight = weight;
 		}
+        
+        @Override
+        public int compareTo(Node other) {
+            return this.weight - other.weight;
+        }
 	}
 }
