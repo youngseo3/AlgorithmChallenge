@@ -22,14 +22,12 @@ public class Solution {
             
             st = new StringTokenizer(br.readLine());
             A = new int[M + 1];
-            A[0] = 0; // 0초에는 움직이지 않음
             for(int i = 1; i <= M; i++) {
                 A[i] = Integer.parseInt(st.nextToken());
             }
             
             st = new StringTokenizer(br.readLine());
             B = new int[M + 1];
-            B[0] = 0; // 0초에는 움직이지 않음
             for(int i = 1; i <= M; i++) {
                 B[i] = Integer.parseInt(st.nextToken());
             }
