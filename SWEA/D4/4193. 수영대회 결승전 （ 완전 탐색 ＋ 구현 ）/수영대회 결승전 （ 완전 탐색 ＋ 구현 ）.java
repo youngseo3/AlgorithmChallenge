@@ -75,7 +75,6 @@ public class Solution {
 				
 				if(map[nx][ny] == 2) {
 					if(time % 3 != 2) {
-						visited[x][y] = true;
 						q.offer(new Point(x, y, time + 1));
 					} else {
 						visited[nx][ny] = true;
