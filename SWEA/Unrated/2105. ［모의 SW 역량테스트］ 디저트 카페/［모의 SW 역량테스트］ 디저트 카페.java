@@ -30,8 +30,8 @@ public class Solution {
 				}
 			}
 			
-			for(int i = 0; i < N - 2; i++) {
-				for(int j = 1; j < N - 1; j++) {
+			for(int i = 0; i < N; i++) {
+				for(int j = 1; j < N; j++) {
 					visited = new boolean[N][N];
 					dessert = new boolean[101];
 					visited[i][j] = true;
