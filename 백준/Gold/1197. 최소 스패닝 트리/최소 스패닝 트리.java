@@ -32,7 +32,7 @@ public class Main {
 		Arrays.sort(edges);
 		
 		int totalEdges = 0;
-		int minWeight = 0;
+		long minWeight = 0;
 		for(int i = 0; i < E; i++) {
 			Edge edge = edges[i];
 			int a = edge.a;
