@@ -3,79 +3,85 @@ import java.util.*;
 
 public class Main {
 
+	static int V, E;
+	static int[] parents;
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		int V = Integer.parseInt(st.nextToken());
-		int E = Integer.parseInt(st.nextToken());
-		
-		// 그래프 구현
-		List<List<Dest>> integers = new ArrayList<>();
+		V = Integer.parseInt(st.nextToken());
+		E = Integer.parseInt(st.nextToken());
+		parents = new int[V + 1];
 		
 		for(int i = 0; i <= V; i++) {
-			integers.add(new ArrayList<>());
+			parents[i] = i;
 		}
 		
-		for(int i = 1; i <= E; i++) {
+		Edge[] edges = new Edge[E];
+		for(int i = 0; i < E; i++) {
 			st = new StringTokenizer(br.readLine());
 			
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());
-			int weight = Integer.parseInt(st.nextToken());
+			int w = Integer.parseInt(st.nextToken());
 			
-			integers.get(a).add(new Dest(b, weight));
-			integers.get(b).add(new Dest(a, weight));
+			edges[i] = new Edge(a, b, w);
 		}
 		
-		// 최소 거리 배열
-		int[] distance = new int[V + 1];
-		Arrays.fill(distance, Integer.MAX_VALUE);
+		Arrays.sort(edges);
 		
-		// 기준 정점 방문 여부
-		boolean[] visited = new boolean[V + 1];
-		
-		distance[1] = 0;
-	
-		for(int cnt = 1; cnt <= V; cnt++) {
-			// 기준 정점
-			int minIdx = -1;
-			int minD = Integer.MAX_VALUE;
+		int totalEdges = 0;
+		int minWeight = 0;
+		for(int i = 0; i < E; i++) {
+			Edge edge = edges[i];
+			int a = edge.a;
+			int b = edge.b;
+			int w = edge.w;
 			
-			// 기준 정점이 아닌 것들 중에서 기준 정점을 잡고자 최소 거리를 가진 정점을 선택
-			for(int i = 1; i <= V; i++) {
-				if(!visited[i] && distance[i] < minD) {
-					minIdx = i;
-					minD = distance[i];
-				}
+			if(union(a, b)) {
+				totalEdges++;
+				minWeight += w;
 			}
 			
-			visited[minIdx] = true;
-			
-			for(Dest d: integers.get(minIdx)) {
-				int to = d.to;
-				int dist = d.dist;
-				
-				if(!visited[to] && dist < distance[to]) {
-					distance[to] = dist;
-				}
-			}
+			if(totalEdges == V - 1) break;
 		}
 		
-		int sum = 0;
-		for(int i = 1; i <= V; i++) {
-			sum += distance[i];
-		}
-		System.out.println(sum);
+		System.out.println(minWeight);
 	}
 
-	static class Dest {
-		int to;
-		int dist;
+	private static boolean union(int a, int b) {
+		int rootA = find(a);
+		int rootB = find(b);
 		
-		Dest(int to, int dist) {
-			this.to = to;
-			this.dist = dist;
+		if(rootA == rootB) return false;
+		
+		parents[rootB] = rootA;
+		return true;
+	}
+
+	private static int find(int a) {
+		if(a != parents[a]) {
+			parents[a] = find(parents[a]);
+		}
+		
+		return parents[a];
+	}
+
+	static class Edge implements Comparable<Edge> {
+		int a;
+		int b;
+		int w;
+		
+		public Edge(int a, int b, int w) {
+			this.a = a;
+			this.b = b;
+			this.w = w;
+		}
+		
+		@Override
+		public int compareTo(Edge o) {
+			return Integer.compare(this.w, o.w);
 		}
 	}
 }
