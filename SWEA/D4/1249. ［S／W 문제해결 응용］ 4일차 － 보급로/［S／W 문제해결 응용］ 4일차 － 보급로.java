@@ -1,22 +1,24 @@
 import java.io.*;
 import java.util.*;
 
+import sun.util.resources.cldr.ms.TimeZoneNames_ms;
+
 public class Solution {
 
 	static int N;
 	static int[] dx = {-1, 1, 0, 0};
 	static int[] dy = {0, 0, -1, 1};
 	static int[][] map;
-	
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		int T = Integer.parseInt(br.readLine());
-		
+
 		for(int tc = 1; tc <= T; tc++) {
 			N = Integer.parseInt(br.readLine());
 			map = new int[N][N];
-			
+
 			for(int i = 0; i < N; i++) {
 				String line = br.readLine();
 				
@@ -25,21 +27,23 @@ public class Solution {
 				}
 			}
 			
-			sb.append("#" + tc + " ").append(dijkstra() + "\n");
+			int ans = dijkstra(new Point(0, 0, 0));
+			
+			sb.append("#" + tc + " ").append(ans + "\n");
 		}
 		
 		System.out.println(sb);
 	}
-
-	private static int dijkstra() {
+	
+	private static int dijkstra(Point p) {
 		int[][] times = new int[N][N];
 		for(int i = 0; i < N; i++) {
-			Arrays.fill(times[i], Integer.MAX_VALUE);
+			Arrays.fill(times[i], Integer.MAX_VALUE);	
 		}
-		times[0][0] = 0;
+		times[p.x][p.y] = p.t;
 		
 		PriorityQueue<Point> pq = new PriorityQueue<>();
-		pq.offer(new Point(0, 0, 0));
+		pq.offer(new Point(p.x, p.y, p.t));
 		
 		while(!pq.isEmpty()) {
 			Point current = pq.poll();
@@ -47,16 +51,16 @@ public class Solution {
 			int y = current.y;
 			int t = current.t;
 			
-			if(current.t > times[x][y]) continue;
+			if(t > times[x][y]) continue;
 			
 			for(int i = 0; i < 4; i++) {
-				int nx = x + dx[i];
-				int ny = y + dy[i];
+				int nx = x + dx[i]; 
+				int ny = y + dy[i]; 
 				
 				if(nx < 0 || nx >= N || ny < 0 || ny >= N) continue;
 				
-				if(map[nx][ny] + times[x][y] < times[nx][ny]) {
-					times[nx][ny] = map[nx][ny] + times[x][y];
+				if(times[x][y] + map[nx][ny] < times[nx][ny]) {
+					times[nx][ny] = times[x][y] + map[nx][ny];
 					pq.offer(new Point(nx, ny, times[nx][ny]));
 				}
 			}
@@ -80,5 +84,6 @@ public class Solution {
 		public int compareTo(Point o) {
 			return Integer.compare(this.t, o.t);
 		}
+		
 	}
 }
