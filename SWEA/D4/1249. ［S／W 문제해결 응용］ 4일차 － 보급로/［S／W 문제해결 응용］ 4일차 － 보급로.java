@@ -1,89 +1,84 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
-import sun.util.resources.cldr.ms.TimeZoneNames_ms;
 
 public class Solution {
+	public static int n;
+	public static int[][] map;
+	public static int[] dx = {-1, 1, 0, 0};
+	public static int[] dy = {0, 0, -1, 1};
 
-	static int N;
-	static int[] dx = {-1, 1, 0, 0};
-	static int[] dy = {0, 0, -1, 1};
-	static int[][] map;
-
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		int T = Integer.parseInt(br.readLine());
-
-		for(int tc = 1; tc <= T; tc++) {
-			N = Integer.parseInt(br.readLine());
-			map = new int[N][N];
-
-			for(int i = 0; i < N; i++) {
-				String line = br.readLine();
-				
-				for(int j = 0; j < N; j++) {
-					map[i][j] = line.charAt(j) - '0';
-				}
-			}
-			
-			int ans = dijkstra(new Point(0, 0, 0));
-			
-			sb.append("#" + tc + " ").append(ans + "\n");
-		}
-		
-		System.out.println(sb);
-	}
-	
-	private static int dijkstra(Point p) {
-		int[][] times = new int[N][N];
-		for(int i = 0; i < N; i++) {
-			Arrays.fill(times[i], Integer.MAX_VALUE);	
-		}
-		times[p.x][p.y] = p.t;
-		
-		PriorityQueue<Point> pq = new PriorityQueue<>();
-		pq.offer(new Point(p.x, p.y, p.t));
-		
-		while(!pq.isEmpty()) {
-			Point current = pq.poll();
-			int x = current.x;
-			int y = current.y;
-			int t = current.t;
-			
-			if(t > times[x][y]) continue;
-			
-			for(int i = 0; i < 4; i++) {
-				int nx = x + dx[i]; 
-				int ny = y + dy[i]; 
-				
-				if(nx < 0 || nx >= N || ny < 0 || ny >= N) continue;
-				
-				if(times[x][y] + map[nx][ny] < times[nx][ny]) {
-					times[nx][ny] = times[x][y] + map[nx][ny];
-					pq.offer(new Point(nx, ny, times[nx][ny]));
-				}
-			}
-		}
-		
-		return times[N - 1][N - 1];
-	}
-
-	static class Point implements Comparable<Point> {
+	public static class Node {
 		int x;
 		int y;
-		int t;
-		
-		public Point(int x, int y, int t) {
+		int dis;
+		public Node(int x, int y, int dis) {
 			this.x = x;
 			this.y = y;
-			this.t = t;
+			this.dis = dis;
+		}
+	}
+
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+
+		int TC = Integer.parseInt(br.readLine());
+		for(int test_case=1;test_case<=TC;test_case++){
+			n = Integer.parseInt(br.readLine());
+			map = new int[n][n];
+
+			for(int i=0;i<n;i++) {
+				String[] data = br.readLine().split("");
+				for(int j=0;j<n;j++) {
+					map[i][j] = Integer.parseInt(data[j]);
+				}
+			}
+			int ans = bfs();
+			sb.append("#"+test_case).append(" ").append(ans).append("\n");
 		}
 
-		@Override
-		public int compareTo(Point o) {
-			return Integer.compare(this.t, o.t);
-		}
-		
+		System.out.println(sb.toString());
+
 	}
+
+	public static int bfs() {
+		int[][] visited = new int[n][n];
+		for(int i=0;i<n;i++) {
+			Arrays.fill(visited[i], Integer.MAX_VALUE);
+		}
+		Queue<Node> q = new LinkedList<Node>();
+		visited[0][0] = 0;
+		q.offer(new Node(0, 0, 0));
+		int dis = Integer.MAX_VALUE;
+		while(!q.isEmpty()) {
+			Node node = q.poll();
+			if(node.x == n-1 && node.y == n-1) {
+				dis = Math.min(dis, node.dis);
+				continue;
+			}
+
+			for(int d=0;d<4;d++) {
+				int nx = node.x + dx[d];
+				int ny = node.y + dy[d];
+				if(0 <= nx && nx < n && 0 <= ny && ny < n) {
+					int distance = node.dis + map[nx][ny];
+                    // 만약 이미 지나갔던 최단비용보다 더 작은 비용으로 지나갈 수 있다면
+                    // 값을 갱신해주고 Queue에 넣어주는 부분
+					if(visited[nx][ny] > distance) {
+						visited[nx][ny] = distance;
+						q.add(new Node(nx, ny, distance));
+					} 
+				}
+			}
+		}
+
+		return dis;
+
+	}
+
 }
