@@ -1,49 +1,44 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
-import java.util.Stack;
+import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        
-        int N = Integer.parseInt(br.readLine());
-        StringTokenizer st = new StringTokenizer(br.readLine());
+	static List<Integer> lis = new ArrayList<>();
 
-        int[] A = new int[N + 1];
-        for(int i = 1; i < N + 1; i++) {
-        	A[i] = Integer.parseInt(st.nextToken());
-        }
-       
-        int[] dp = new int[N + 1];
-        int lis = 1;
-        for(int i = 1; i < N + 1; i++) {
-        	dp[i] = 1;
-        	
-        	for(int j = 1; j < i; j++) {
-        		if(A[i] > A[j]) {
-        			dp[i] = Math.max(dp[i], dp[j] + 1);
-        			lis = Math.max(lis, dp[i]);
-        		}
-        	}
-        }
-        
-		sb.append(lis + "\n");
-		Stack<Integer> stack = new Stack<>();
-		for(int i = N; i >= 1; i--) {
-			if(dp[i] == lis) {
-				stack.push(A[i]);
-				lis--;
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int N = sc.nextInt();
+
+		int[] A = new int[N];
+		for(int i = 0; i < N; i++) {
+			A[i] = sc.nextInt();
+		}
+		
+		int[] dp = new int[N];
+		int len = 1;
+		for(int i = 0; i < N; i++) {
+			dp[i] = 1;
+
+			for(int j = 0; j < i; j++) {
+				
+				if(A[i] > A[j] && dp[i] <= dp[j]) {
+					dp[i] = dp[j] + 1;
+					len = Math.max(len, dp[i]);
+				}
+			}
+		}
+
+		System.out.println(len);
+		
+		Stack<Integer> st = new Stack<>();
+		for(int i = N - 1; i >= 0; i--) {
+			if(dp[i] == len) {
+				st.push(A[i]);
+				len--;
 			}
 		}
 		
-		while(!stack.isEmpty()) {
-			sb.append(stack.pop() + " ");
+		while(!st.isEmpty()) {
+			System.out.print(st.pop() + " ");
 		}
-		System.out.println(sb);
 	}
-
 }
