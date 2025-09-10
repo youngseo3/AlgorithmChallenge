@@ -12,7 +12,7 @@ public class Solution {
 		for(int tc = 1; tc <= T; tc++) {
 			int N = Integer.parseInt(br.readLine());
 			int M = Integer.parseInt(br.readLine());
-			int[][] dist = new int[N + 1][N + 1];
+			boolean[][] visited = new boolean[N + 1][N + 1];
 			
 			for(int i = 0; i < M; i++) {
 				st = new StringTokenizer(br.readLine());
@@ -20,39 +20,30 @@ public class Solution {
 				int a = Integer.parseInt(st.nextToken());
 				int b = Integer.parseInt(st.nextToken());
 				
-				dist[a][b] = -1;
-				dist[b][a] = 1;
+				visited[a][b] = true;
 			}
 			
 			for(int k = 1; k <= N; k++) {
 				for(int i = 1; i <= N; i++) {
 					for(int j = 1; j <= N; j++) {
-						if(dist[i][k] == 1 && dist[k][j] == 1) {
-							dist[i][j] = 1;
-						}
-						else if(dist[i][k] == -1 && dist[k][j] == -1) {
-							dist[i][j] = -1;
+						if(visited[i][k] && visited[k][j]) {
+							visited[i][j] = true;
 						}
 					}
 				}
 			}
-			
+            
 			int ans = 0;
 			for(int i = 1; i <= N; i++) {
 				int cnt = 0;
 				
 				for(int j = 1; j <= N; j++) {
-					if(dist[i][j] == 0) {
+					if(i != j && (visited[i][j] || visited[j][i])) {
 						cnt++;
-					}
-					
-					if(cnt > 1) {
-						cnt = 0;
-						break;
 					}
 				}
 				
-				if(cnt == 1) {
+				if(cnt == N - 1) {
 					ans++;
 				}
 			}
