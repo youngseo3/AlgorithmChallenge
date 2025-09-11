@@ -105,54 +105,64 @@ public class Solution {
 		minTotalTime = Math.min(minTotalTime, currentTime);
 	}
 
-	// 특정 그룹이 특정 계단을 내려가는 시간을 시뮬레이션하는 헬퍼 함수
-	private static int calculateTime(Point[] group, Point ent) {
-		// 해당 그룹에 아무도 없으면 0을 반환합니다.
-		if (group.length == 0) {
-			return 0;
-		}
+private static int calculateTime(Point[] group, Point ent) {
+    if (group.length == 0) {
+        return 0;
+    }
 
-		// 계단 입구까지의 도착 시간을 기준으로 오름차순 정렬하는 우선순위 큐
-		PriorityQueue<Integer> arrivalPQ = new PriorityQueue<>();
-		for (Point person : group) {
-			arrivalPQ.offer(getDistance(ent, person));
-		}
+    // 1. 모든 사람의 도착 시간을 리스트에 담아 정렬합니다. (도착 예정 그룹)
+    List<Integer> arrivalTimes = new ArrayList<>();
+    for (Point person : group) {
+        // 도착하면 1분 대기 후 내려갈 수 있으므로, 실제 계단 이용 가능 시간은 도착시간+1 입니다.
+        arrivalTimes.add(getDistance(ent, person) + 1);
+    }
+    Collections.sort(arrivalTimes);
 
-		// 계단의 3개 자리가 각각 언제 비는지를 저장하는 배열
-		int[] stairStatus = new int[3];
-		int stairLength = ent.num; // 계단의 길이
-		int lastFinishTime = 0; // 이 그룹에서 가장 마지막으로 내려간 사람의 완료 시간
+    int time = 0; // 현재 시간
+    int finishedCount = 0; // 완료한 사람 수
+    int arrivalIdx = 0; // 도착 예정 그룹에서 다음으로 도착할 사람의 인덱스
 
-		while (!arrivalPQ.isEmpty()) {
-			int arrivalTime = arrivalPQ.poll();
+    Queue<Integer> waitingQueue = new LinkedList<>(); // 대기 그룹
+    Queue<Integer> onStairs = new LinkedList<>(); // 계단 위 그룹 (완료 시간 저장)
 
-			// 3개의 자리 중 가장 빨리 비는 자리를 찾습니다.
-			// 매번 정렬하면 항상 0번 인덱스가 가장 빠른 시간이 됩니다.
-			Arrays.sort(stairStatus);
-			int earliestFreeTime = stairStatus[0];
+    // 모든 사람이 완료할 때까지 시간을 흐르게 합니다.
+    while (finishedCount < group.length) {
+        time++; // 1분 경과
 
-			// 사람이 계단을 내려가기 시작하는 시간
-			// (도착시간+1)과 (가장 빨리 비는 시간) 중 더 늦은 시간이어야 합니다.
-			int startTime = Math.max(arrivalTime + 1, earliestFreeTime);
+        // [STEP 1] 시간이 다 돼서 계단에서 내려온 사람 처리 
+        // onStairs 큐에는 '완료 시간'이 들어있으므로, 현재 시간과 같은 사람을 모두 내보냅니다.
+        while (!onStairs.isEmpty() && onStairs.peek() == time) {
+            onStairs.poll();
+            finishedCount++;
+        }
 
-			// 이 사람이 계단을 다 내려가는 시간
-			int finishTime = startTime + stairLength;
+        // [STEP 2] 계단 입구에 새로 도착한 사람 처리
+        // arrivalTimes 리스트에서 현재 시간에 도착한 사람들을 모두 대기 큐로 옮깁니다.
+        while (arrivalIdx < arrivalTimes.size() && arrivalTimes.get(arrivalIdx) <= time) {
+            waitingQueue.offer(arrivalTimes.get(arrivalIdx));
+            arrivalIdx++;
+        }
 
-			// 이 사람이 사용한 자리를 새로운 완료 시간으로 갱신합니다.
-			stairStatus[0] = finishTime;
+        // [STEP 3] 대기 중인 사람을 계단에 올리기 
+        // 계단에 빈자리가 있고(3명 미만), 기다리는 사람이 있다면 계단에 올립니다.
+        while (onStairs.size() < 3 && !waitingQueue.isEmpty()) {
+            waitingQueue.poll(); // 대기 그룹에서 한 명 나옴
+            
+            // 현재 시간에 계단을 오르기 시작했으므로, 완료 시간은 (현재시간 + 계단길이) 입니다.
+            int finishTime = time + ent.num;
+            onStairs.offer(finishTime); // 계단 위 그룹에 완료 시간을 추가
+        }
+    }
 
-			// 그룹의 최종 완료 시간은 모든 사람의 완료 시간 중 가장 늦은 시간입니다.
-			lastFinishTime = finishTime; 
-		}
-
-		return lastFinishTime;
-	}
+    // 모든 사람이 내려왔을 때의 시간이 최종 소요 시간입니다.
+    return time;
+}
 
 	private static int getDistance(Point ent, Point sel) {
 		return Math.abs(ent.x - sel.x) + Math.abs(ent.y - sel.y);
 	}
 
-	static class Point implements Comparable<Point> {
+	static class Point {
 		int x;
 		int y;
 		int num;
@@ -172,9 +182,5 @@ public class Solution {
 			this.distance = distance;
 		}
 
-		@Override
-		public int compareTo(Point o) {
-			return Integer.compare(this.distance, o.distance);
-		}
 	}
 }
