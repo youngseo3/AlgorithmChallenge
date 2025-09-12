@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Solution {
 
-	static int N, M, cost, ans, homeSize;
+	static int N, M, cost, ans;
 	static int[] dx = {-1, 1, 0, 0};
 	static int[] dy = {0, 0, -1, 1};
 	static int[][] cities;
@@ -21,7 +21,6 @@ public class Solution {
 			N = Integer.parseInt(st.nextToken());
 			M = Integer.parseInt(st.nextToken());
 			ans = 0;
-			homeSize = 0;
 			cities = new int[N][N];
 			
 			for(int i = 0; i < N; i++) {
@@ -29,12 +28,10 @@ public class Solution {
 				
 				for(int j = 0; j < N; j++) {
 					cities[i][j] = Integer.parseInt(st.nextToken());
-					if(cities[i][j] == 1) homeSize++;
 				}
 			}
 			
-			boolean check = false;
-			for(int k = 1; ; k++) {
+			for(int k = 1; k < 22; k++) {
 				cost = k * k + (k - 1) * (k - 1);
 				
 				for(int i = 0; i < N; i++) {
@@ -42,13 +39,6 @@ public class Solution {
 						solve(i, j, k);
 					}
 				}
-				
-				if(check) break;
-				if(cost > homeSize * M) {
-					check = true;
-					continue;
-				}
-				
 //				if(k * k + (k - 1) * (k - 1) > N * N + 400) break;
 			}
 			
@@ -90,9 +80,7 @@ public class Solution {
 				q.add(new int[] {nx, ny});
 			}
 		}
-		
-//		System.out.println(cnt);
-		
+			
 		if(cnt * M >= cost) {
 			ans = Math.max(ans, cnt);
 		}
