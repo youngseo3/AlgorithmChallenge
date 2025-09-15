@@ -1,49 +1,52 @@
+
 import java.io.*;
 import java.util.*;
 
+
 public class Solution {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
 		int T = Integer.parseInt(br.readLine());
-		
-		for(int tc = 1; tc <= T; tc++) {
-			int N = Integer.parseInt(br.readLine());
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			Queue<String> A;
-			Queue<String> B;
-			int aSize, bSize = N / 2;
+		for(int t = 1; t<=T; t++) {
+			int N = Integer.parseInt(br.readLine()); //카드의 개수
+			String[] cards = new String[N];
 			
-			if(N % 2 == 1) {
-				aSize = N / 2 + 1;
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			for(int i = 0; i<N; i++) {
+				cards[i] = st.nextToken();
+			}
+			int mid = 0;
+			if(N%2 == 0) {
+				mid = N/2-1;
 			}
 			else {
-				aSize = N / 2;
+				mid = N/2 ;
 			}
-			A = new ArrayDeque<>();
-			B = new ArrayDeque<>();
-			
-			for(int i = 0; i < aSize; i++) {
-				A.add(st.nextToken());
-			}
-			
-			for(int i = 0; i < bSize; i++) {
-				B.add(st.nextToken());
-			}
-			
-			sb.append("#" + tc + " ");
-			while(!A.isEmpty()) {
-				sb.append(A.poll() + " ");
-				
-				if(!B.isEmpty()) {
-					sb.append(B.poll() + " ");
+			String[] arr1 = new String[mid+1];
+			String[] arr2 = new String[N-mid+1];
+			for(int i = 0; i<N; i++) {
+				if(i<=mid) {
+					arr1[i] = cards[i];
+				}
+				else {
+					arr2[i-(mid+1)] = cards[i];
 				}
 			}
-			sb.append("\n");
+			for(int i = 0; i<N; i++) {
+				if(i%2 == 0) {
+					cards[i] = arr1[i/2];
+				} 
+				else {
+					cards[i] = arr2[i/2];
+				}
+			}
+			System.out.print("#"+t+" ");
+			for(int i = 0; i<N; i++) {
+				System.out.print(cards[i]+" ");
+			}
+			System.out.println();
 		}
-		
-		System.out.println(sb);
 	}
 
 }
