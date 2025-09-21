@@ -55,7 +55,7 @@ public class Main {
 					visited[nx][ny][isBreak] = true;
 					q.offer(new Point(nx, ny, cnt + 1, isBreak));
 				}
-				else if(map[nx][ny] == 1 && isBreak == 0) {
+                else if(map[nx][ny] == 1 && isBreak == 0 && !visited[nx][ny][1]) {
 					visited[nx][ny][1] = true;
 					q.offer(new Point(nx, ny, cnt + 1, 1));
 				}
