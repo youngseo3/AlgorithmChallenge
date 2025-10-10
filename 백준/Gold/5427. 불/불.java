@@ -55,12 +55,6 @@ public class Main {
 		q.offer(new Point(startX, startY, 1));
 		boolean[][] visited = new boolean[h][w];
 	    visited[startX][startY] = true;
-	    
-	    // 만약 시작점이 가장자리라면 바로 1을 리턴
-	    if (startX == 0 || startX == h - 1 || startY == 0 || startY == w - 1) {
-	        result = 1;
-	        return true;
-	    }
 
 		while(!q.isEmpty()) {
 			int fireSize = fire.size();
