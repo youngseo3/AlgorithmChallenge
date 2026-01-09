@@ -2,60 +2,70 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static class Node implements Comparable<Node>{
-		int edge, w;
-		Node(int edge, int w){
-			this.edge = edge;
-			this.w = w;
-		}
-		@Override
-		public int compareTo(Node o) {
-			// TODO Auto-generated method stub
-			return this.w-o.w;
-		}
-	}
-	public static void main(String[] args) throws NumberFormatException, IOException {
+
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine()); //도시의 개수 
-		int M = Integer.parseInt(br.readLine()); //버스의 개수
+		StringTokenizer st;
 		
-		List<Node>[] graph = new ArrayList[N+1];
-		for(int i = 0; i<N+1; i++) {
-			graph[i] = new ArrayList<>();
+		int N = Integer.parseInt(br.readLine());
+		int M = Integer.parseInt(br.readLine());
+		
+		List<List<City>> cities = new ArrayList<>();
+		for(int i = 0; i <= N; i++) {
+			cities.add(new ArrayList<>());
 		}
-		for(int i = 0; i<M; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int s = Integer.parseInt(st.nextToken());
-			int e = Integer.parseInt(st.nextToken());
-			int w = Integer.parseInt(st.nextToken());
+		
+		for(int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
 			
-			graph[s].add(new Node(e, w));
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			int c = Integer.parseInt(st.nextToken());
+			
+			cities.get(a).add(new City(b, c));
 		}
-		StringTokenizer st2 = new StringTokenizer(br.readLine());
-		int s = Integer.parseInt(st2.nextToken());//출발 도시 번호
-		int d = Integer.parseInt(st2.nextToken());//도착 도시 번호
 		
-		PriorityQueue<Node> pq = new PriorityQueue<>();
-		int[] dist = new int[N+1];
-		Arrays.fill(dist, Integer.MAX_VALUE);
-		boolean[] v = new boolean[N+1];
+		st = new StringTokenizer(br.readLine());
+		int start = Integer.parseInt(st.nextToken());
+		int end = Integer.parseInt(st.nextToken());
 		
-		pq.offer(new Node(s, 0));
-		dist[s] = 0;
+		int[] costs = new int[N + 1];
+		Arrays.fill(costs, Integer.MAX_VALUE);
+		costs[start] = 0;
+		
+		PriorityQueue<City> pq = new PriorityQueue<>();
+		pq.offer(new City(start, 0));
+		
 		while(!pq.isEmpty()) {
-			Node now = pq.poll();
-			if(v[now.edge]) continue;
-			v[now.edge] = true;
-			if(now.edge == d) break;
-			for(Node newNode: graph[now.edge]) {
-				int newCost = dist[now.edge] + newNode.w;
-				if(newCost<dist[newNode.edge]) {
-					dist[newNode.edge] = newCost;
-					pq.offer(new Node(newNode.edge, dist[newNode.edge]));
+			City current = pq.poll();
+			int v = current.v;
+			int cost = current.cost;
+			
+			if(cost > costs[v]) continue;
+			
+			for(City next: cities.get(v)) {
+				if(costs[v] + next.cost < costs[next.v]) {
+					costs[next.v] = costs[v] + next.cost;
+					pq.offer(new City(next.v, costs[next.v]));
 				}
 			}
 		}
-		System.out.println(dist[d]);
+		
+		System.out.println(costs[end]);
 	}
+	
+	static class City implements Comparable<City> {
+		int v;
+		int cost;
+		
+		public City(int v, int cost) {
+			this.v = v;
+			this.cost = cost;
+		}
 
+		@Override
+		public int compareTo(City o) {
+			return Integer.compare(this.cost, o.cost);
+		}
+	}
 }
